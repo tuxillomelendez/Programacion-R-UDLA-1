@@ -19,7 +19,7 @@ output:
 
 A continuación se presentará un análisis realizado de la clase "**Análisis Estadístico**", combinado con lo aprendido en "**Programación en R**".
 
-```{r message=FALSE, warning=FALSE}
+```{r warning=FALSE, message=FALSE}
 #Librerias utilizadas en el analisis.
 library(readxl)
 library(ggplot2)
@@ -51,7 +51,6 @@ sueldos
 ```
 
 ```{r, fig.align="center", label='Histrograma'}
-?ggplot2
 ggplot(sueldos, aes(x=work_year)) + geom_histogram(binwidth = 0.5) + 
   labs(
       title = "Sueldos Profesionales Data Science", # Título del gráfico
