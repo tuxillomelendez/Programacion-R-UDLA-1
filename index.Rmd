@@ -68,28 +68,43 @@ ggplot(sueldos, aes(x=employment_type, y=salary_in_usd_mm)) + geom_boxplot() +
  theme(plot.margin = margin(t = 20, r = 50, b = 40, l = 10)) +
  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=0.5)) +
  labs(
-      title = "Sueldos en MM Dolares", # Título del gráfico
-      subtitle = "", # Subtítulo del gráfico
-      #caption = "", # Nota al pie del gráfico
-      x = "País", # Etiqueta del eje X
-      y = "Sueldo en Miles de Dolares" # Etiqueta del eje Y
+      title = "Sueldos en MM Dolares", 
+      subtitle = "", 
+      caption = "(CT: Contract, FL: Freelance, FT: Fulltime, PT: Partime)", 
+      x = "Tipo de Contrato", # Etiqueta del eje X
+      y = "Sueldo en Dolares" # Etiqueta del eje Y
       ) +
   theme(plot.title = element_text(hjust = 0.5))+
-  theme_light()
+  theme_economist()
 ```
 ```{r, fig.align="center"}
-ggplot(sueldos, aes(x=employment_type, y=salary_in_usd_mm)) + geom_boxplot() +
+ggplot(sueldos, aes(x=experience_level, y=salary_in_usd_mm)) + geom_boxplot() +
  theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=0.5)) +
  theme(plot.margin = margin(t = 20, r = 50, b = 40, l = 10)) +
  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=0.5)) +
  labs(
       title = "Sueldos en MM Dolares", # Título del gráfico
       subtitle = "", # Subtítulo del gráfico
-      #caption = "", # Nota al pie del gráfico
-      x = "País", # Etiqueta del eje X
+      caption = "(EN: Entry, EX: Experto, MI: Middle, SE: Senior)", # Nota al pie del gráfico
+      x = "Experiencia Laboral", # Etiqueta del eje X
       y = "Sueldo en Miles de Dolares" # Etiqueta del eje Y
       ) +
   theme(plot.title = element_text(hjust = 0.5))+
-  theme_minimal()
+  stat_boxplot(geom = "errorbar", width = 0.2) +
+  theme_economist()
+```
+```{r}
+# creacion de la Desviacion Estandar 
+se_sueldos = sd(sueldos$salary_in_usd)
+mutate(sueldos, Salary_in_clp = sueldos$salary_in_usd_mm*896)
+```
+
+
+```{r, fig.align="center"}
+ggplot(sueldos, aes(x=experience_level, y=salary_in_usd_mm)) + geom_point() +  # Puntos
+  geom_errorbar(aes(ymin = salary_in_usd_mm - se_sueldos, ymax = salary_in_usd_mm + se_sueldos), width = 0.2) +  # Barras de error
+  labs(title = "Gráfico de Dispersión con Barras de Error",
+       x = "Eje X",
+       y = "Eje Y")
 ```
 
