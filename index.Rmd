@@ -15,6 +15,9 @@ output:
   word_document:
     toc: true
     toc_depth: '3'
+  pdf_document:
+    toc: true
+    toc_depth: '3'
 ---
 
 A continuación se presentará un análisis realizado de la clase "**Análisis Estadístico**", combinado con lo aprendido en "**Programación en R**".
