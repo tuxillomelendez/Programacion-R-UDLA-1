@@ -62,10 +62,12 @@ conflict_prefer("lag", "dplyr")
 ```
 
 # Introducción
+
 El conjunto de datos sobre la población de vehículos eléctricos proporciona información detallada sobre los vehículos eléctricos de batería (BEV) y los vehículos híbridos enchufables (PHEV) que están registrados actualmente a través del Departamento de Licencias del Estado de Washington. Los datos incluyen detalles como la marca, el modelo, el año del vehículo y la ubicación de registro. Este conjunto de datos es una valiosa fuente de información para el análisis de la adopción de vehículos eléctricos en la región y está disponible públicamente para su acceso y uso. <br>
 El archivo con objetivo de análisis fue descargado de la siguiente url [https://catalog.data.gov/](https://catalog.data.gov/dataset/electric-vehicle-population-data)
 
 ## Arquitectura
+
 *La arquitectura se centra en el uso del lenguaje de programación R como herramienta principal para el análisis y modelado de datos. Los datos se importan en R desde diversas fuentes, como archivos CSV en este caso y son almacenadas en base de datos MySQL. Una vez en R, se utilizan varios paquetes para procesar y analizar los datos. Entre estos paquetes se incluyen `tidyverse` para la ciencia de datos, `ggplot2` para la visualización de datos, `dplyr` para la visualización de datos  y `rmarkdown` para la creación de documentos dinámicos. Los resultados del análisis se pueden exportar en varios formatos, incluyendo HTML. Además, se utilizan archivos de configuración `.ini` para almacenar variables o ajustes utilizados dentro de este flujo de trabajo.* <br><br><br>
 <center>
   ![Arquitectura de alto nivel de la solución para el análisis de datos](ArquitecturaAltoNivel.jpg){width=100% height=100%}
@@ -73,10 +75,10 @@ El archivo con objetivo de análisis fue descargado de la siguiente url [https:/
 <br><br><br>
 
 ## Conexión a BD a través de R
-Este código en R lee un archivo de configuración "config.ini" y extrae varios parámetros necesarios para conectarse a una base de datos, como el nombre de la base, el servidor, el puerto, el usuario y la contraseña. Luego, utiliza estos parámetros para establecer una conexión a la base de datos mediante la función conectar_mysql_desde_ini.
 
+Este código en R lee un archivo de configuración "config.ini" y extrae varios parámetros necesarios para conectarse a una base de datos, como el nombre de la base, el servidor, el puerto, el usuario y la contraseña. Luego, utiliza estos parámetros para establecer una conexión a la base de datos mediante la función conectar_mysql_desde_ini.
 ```{r, warning=FALSE}
-# Utiliza la funcion "conectar_mysql_desde_ini" de funciones_jmb_R donde se le entrega como parametro
+# Utiliza la función "conectar_mysql_desde_ini" de funciones_jmb_R donde se le entrega como parametro
 # el archivo INI con las variables para conectar a MySQL.
 
 archivo_config <- "config.ini"
@@ -93,6 +95,7 @@ electric_cars <- read.csv("Electric_Vehicle_Population_Data.csv", sep = ",")
 
 
 ## Descripción del Conjunto de Datos
+
 Para efectos de investigación técnica de R se almacena la información de la meta data del set de datos a analizar en MySQL en la tabla "metadata_vehiculos".<br>
 Para propósitos de presentación la tabla se "hermosea" con la función kable.<br> 
 ```{r, fig.align="center", warning=FALSE}
@@ -155,6 +158,7 @@ skim(electric_cars)
 ```
 
 ## Almacenamiento en MySQL
+
 Este código en R informa sobre el proceso de escribir datos en una base de datos. Primero, muestra un mensaje indicando que la escritura está en curso y la hora actual. Luego, guarda los datos de electric_cars en la tabla "electric_cars" de la base de datos, reemplazando cualquier contenido previo. Finalmente, muestra un mensaje confirmando que los datos se escribieron exitosamente, junto con la hora en que se completó la operación.
 ```{r message=FALSE, warning=FALSE}
 message(paste("Escribiendo datos en la base de datos... por favor espera. - ", Sys.time()))
@@ -180,10 +184,10 @@ ggplot(data = electric_cars, aes(x = model_year)) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 <br><br>
+
 El gráfico muestra la cantidad de autos eléctricos registrados por año. En el eje horizontal, tenemos los años del modelo (desde 1997 hasta 2025), y en el eje vertical, la cantidad de autos eléctricos. A partir del año 2021, se observa un notable aumento en los registros, indicando una creciente adopción de vehículos eléctricos. En 2023, se registraron aproximadamente 60.000 autos eléctricos.
 
 ## Revisión de las top 20 marcas en el mercado de vehículos eléctricos.
-
 
 ```{r, fig.align="center", warning=FALSE}
 # Obtener las 20 marcas con más autos
@@ -208,6 +212,7 @@ ggplot(data = top_brands, aes(x = reorder(make_grouped, -n), y = n)) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 <br><br>
+
 Claramente la predominancia de TESLA en el mercado de autos eléctricos con una cantidad significativamente mayor en comparación con otras marcas reconocidas en el mercado Estadounidense.
 
 ## Análisis de la distribución de autos eléctricos por ciudad
@@ -232,6 +237,7 @@ ggplot(data = top_cities, aes(x = reorder(city, -n), y = n, group = 1)) +
 
 ```
 <br><br>
+
 Seattle es la ciudad con mas automóviles eléctricos contenidos en el set de datos.
 Un articulo interesante a revisar es [NPR Network](https://www.kuow.org/stories/electric-vehicles-keep-charging-ahead-in-washington)
 
@@ -256,6 +262,7 @@ ggplot() +
 
 
 <br><br>
+
 El mapa muestra la distribución de autos eléctricos en el estado de Washington. La mayor densidad de puntos se encuentra en la ciudad de Seattle.
 
 ## Segmentación de Vehículos dada su fuente de alimentación.
@@ -312,221 +319,6 @@ ggplot(data = df, aes(x = reorder(Elegibilidad, Cantidad), y = Cantidad, label =
 Los vehículos CAFV suelen ser aquellos que utilizan combustibles alternativos, como electricidad, hidrógeno, gas natural comprimido (GNC) o gas licuado de petróleo (GLP), en lugar de gasolina o diésel tradicionales. Estos vehículos son una parte importante de los esfuerzos para reducir las emisiones de gases de efecto invernadero y mejorar la calidad del aire.
 
 Respecto a la distribución de elegibilidad de vehículos CAFV muestra que la mayoría de los vehículos tienen una elegibilidad desconocida (53.38%) debido a que no se ha investigado su autonomía de batería, seguido por aquellos que son elegibles como vehículos CAFV (35.92%). Un número significativamente menor de vehículos no son elegibles debido a su baja autonomía de batería (10.70%). Esto destaca la importancia de investigar y documentar la autonomía de la batería de los vehículos para una clasificación precisa de su elegibilidad como vehículos CAFV.
-
-
-
-<!-- Implementación de códigos en R para explorar los datos. Esto puede incluir visualizaciones de datos, medidas de tendencia central, etc. -->
-
-<!-- ```{r} -->
-
-<!-- # Calcular el rango eléctrico promedio por marca -->
-<!-- average_range_by_make <- electric_cars %>% -->
-<!--   group_by(make) %>% -->
-<!--   summarise(average_range = mean(electric_range, na.rm = TRUE)) %>% -->
-<!--   arrange(desc(average_range)) -->
-
-<!-- # Crear el gráfico de barras -->
-<!-- ggplot(data = average_range_by_make, aes(x = reorder(make, -average_range), y = average_range)) + -->
-<!--   geom_bar(stat = "identity", fill = "skyblue", color = "black") + -->
-<!--   labs(title = "Rango Eléctrico Promedio por Marca", -->
-<!--        x = "Marca", -->
-<!--        y = "Rango Eléctrico Promedio") + -->
-<!--   theme_minimal() + -->
-<!--   theme(axis.text.x = element_text(angle = 90, hjust = 1)) -->
-<!-- ``` -->
-<!-- ```{r} -->
-<!-- #Calcular el rango eléctrico promedio por marca -->
-<!-- average_range_by_make <- electric_cars %>% -->
-<!-- group_by(make) %>% -->
-<!-- summarise(average_range = mean(electric_range, na.rm = TRUE)) %>% -->
-<!-- arrange(desc(average_range)) -->
-
-<!-- #Crear el gráfico de barras -->
-<!-- ggplot(data = average_range_by_make, aes(x = reorder(make, -average_range), y = average_range)) + -->
-<!-- geom_bar(stat = "identity", fill = "skyblue", color = "black") + -->
-<!-- labs(title = "Rango Eléctrico Promedio por Marca", -->
-<!-- x = "Marca", -->
-<!-- y = "Rango Eléctrico Promedio") + -->
-<!-- theme_minimal() + -->
-<!-- theme(axis.text.x = element_text(angle = 90, hjust = 1)) -->
-
-
-<!-- ``` -->
-
-
-<!-- ```{r} -->
-
-<!-- # Graficar el boxplot ordenado -->
-<!-- ggplot(average_range_by_make_model, aes(x = make, y = average_range)) + -->
-<!--   geom_boxplot(fill = "skyblue", color = "black") + -->
-<!--   labs(title = "Rango Eléctrico Promedio por Modelo y Marca", -->
-<!--        x = "Marca", -->
-<!--        y = "Rango Eléctrico Promedio") + -->
-<!--   theme_minimal() + -->
-<!--   theme(axis.text.x = element_text(angle = 90, hjust = 1)) -->
-
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- # Crear el gráfico de caja -->
-<!-- ggplot(data = electric_cars, aes(x = electric_vehicle_type, y = electric_range)) + -->
-<!--   geom_boxplot(fill = "skyblue", color = "black") + -->
-<!--   labs(title = "Distribución del Rango Eléctrico por Tipo de Batería", -->
-<!--        x = "Tipo de Batería", -->
-<!--        y = "Rango Eléctrico") + -->
-<!--   theme_minimal() + -->
-<!--   theme(axis.text.x = element_text(angle = 45, hjust = 1)) -->
-
-<!-- ``` -->
-<!-- Los vehículos BEV tienen un rango eléctrico más amplio en comparación con los PHEV. La mediana para BEV está alrededor de 200 km, mientras que para PHEV está cerca de 100 km. -->
-
-
-<!-- 2. Precio Base (MSRP) -->
-
-<!-- ```{r} -->
-<!-- # Histograma del precio base (MSRP) -->
-<!-- ggplot(data = electric_cars, aes(x = base_msrp)) + -->
-<!--   geom_histogram(bins = 30, fill = "skyblue", color = "black") + -->
-<!--   labs(title = "Distribución de Precio Base (MSRP)", -->
-<!--        x = "Precio Base (MSRP)", -->
-<!--        y = "Frecuencia") -->
-
-<!-- ``` -->
-
-<!-- 3. Boxplot de Precio Base por Fabricante -->
-
-<!-- ```{r} -->
-<!-- # Boxplot del precio base (MSRP) por fabricante -->
-<!-- ggplot(data = electric_cars, aes(x = make, y = base_msrp)) + -->
-<!--   geom_boxplot(fill = "skyblue", color = "black") + -->
-<!--   theme(axis.text.x = element_text(angle = 45, hjust = 1)) + -->
-<!--   labs(title = "Boxplot de Precio Base por Fabricante", -->
-<!--        x = "Fabricante", -->
-<!--        y = "Precio Base (MSRP)") -->
-<!-- ``` -->
-
-<!-- ## Distribución de Variables Cualitativas -->
-
-<!-- 1. Tipo de Vehículo Eléctrico -->
-
-<!-- ```{r} -->
-<!-- # Distribución de tipos de vehículos eléctricos -->
-<!-- ggplot(data = electric_cars, aes(x = electric_vehicle_type, fill = electric_vehicle_type)) + -->
-<!--   geom_bar() + -->
-<!--   labs(title = "Distribución de Tipos de Vehículos Eléctricos", -->
-<!--        x = "Tipo de Vehículo Eléctrico", -->
-<!--        y = "Frecuencia") + -->
-<!--   theme(axis.text.x = element_text(angle = 45, hjust = 1)) -->
-<!-- ``` -->
-
-<!-- 2. Distribución del Rango Eléctrico por Tipo de Vehículo Eléctrico -->
-
-<!-- ```{r} -->
-<!-- # Boxplot del rango eléctrico por tipo de vehículo eléctrico -->
-<!-- ggplot(electric_cars, aes(x = electric_vehicle_type, y = electric_range)) + -->
-<!--   geom_boxplot() + -->
-<!--   labs(title = "Distribución del Rango Eléctrico por Tipo de Vehículo Eléctrico", -->
-<!--        x = "Tipo de Vehículo Eléctrico", -->
-<!--        y = "Rango Eléctrico") -->
-<!-- ``` -->
-
-<!-- ## Relación entre Variables -->
-
-<!-- 1. Diagrama de Dispersión: Rango Eléctrico vs Precio Base (MSRP) -->
-
-<!-- ```{r} -->
-<!-- # Diagrama de dispersión del rango eléctrico vs precio base (MSRP) -->
-<!-- ggplot(data = electric_cars, aes(x = electric_range, y = base_msrp)) + -->
-<!--   geom_point() + -->
-<!--   labs(title = "Diagrama de Dispersión: Rango Eléctrico vs Precio Base (MSRP)", -->
-<!--        x = "Rango Eléctrico", -->
-<!--        y = "Precio Base (MSRP)") -->
-
-<!-- ``` -->
-
-<!-- ## Datos Filtrados y Limpieza -->
-
-<!-- 1. Filtrado de Datos con Valores Cero -->
-
-<!-- ```{r} -->
-<!-- # Filtrar el data frame para excluir las observaciones con valor cero en electric_range y base_msrp -->
-<!-- electric_cars_filtrados <- electric_cars %>% -->
-<!--   filter(electric_range != 0, base_msrp != 0) -->
-
-<!-- # Verificar la muestra obtenida -->
-<!-- head(electric_cars_filtrados) -->
-<!-- ``` -->
-
-<!-- ## Conclusiones del EDA -->
-
-
-
-
-
-
-<!-- ```{r} -->
-
-<!-- ggplot(data = electric_cars, aes(x = electric_range)) + -->
-<!--   geom_histogram(binwidth = 20, fill = "skyblue", color = "black") + -->
-<!--   labs(title = "Histograma de Electric Range", -->
-<!--        x = "Electric Range", -->
-<!--        y = "Frecuencia") -->
-
-<!-- # Filtrar el data frame para excluir las observaciones con valor cero en electric_range -->
-<!-- electric_cars_filtrados <- electric_cars[electric_cars$electric_range != 0, ] -->
-
-<!-- # Crear el histograma -->
-<!-- ggplot(data = electric_cars_filtrados, aes(x = electric_range)) + -->
-<!--   geom_histogram(binwidth = 20, fill = "skyblue", color = "black") + -->
-<!--   labs(title = "Histograma de Electric Range (excluyendo ceros)", -->
-<!--        x = "Electric Range", -->
-<!--        y = "Frecuencia") -->
-
-<!-- ggplot(data = electric_cars, aes(x = base_msrp)) + -->
-<!--   geom_histogram(bins = 30, fill = "skyblue", color = "black") + -->
-<!--   labs(title = "Distribución de Base MSRP", -->
-<!--        x = "Base MSRP", -->
-<!--        y = "Frecuencia") -->
-
-<!-- ggplot(data = electric_cars, aes(x = make, y = base_msrp)) + -->
-<!--   geom_boxplot(fill = "skyblue", color = "black") + -->
-<!--   theme(axis.text.x = element_text(angle = 45, hjust = 1)) + -->
-<!--   labs(title = "Boxplot de Base MSRP por Fabricante", -->
-<!--        x = "Fabricante", -->
-<!--        y = "Base MSRP") -->
-
-
-<!-- ggplot(data = electric_cars, aes(x = electric_vehicle_type, fill = electric_vehicle_type)) + -->
-<!--   geom_bar() + -->
-<!--   labs(title = "Distribución de Tipos de Vehículos Eléctricos", -->
-<!--        x = "Tipo de Vehículo Eléctrico", -->
-<!--        y = "Frecuencia") + -->
-<!--   theme(axis.text.x = element_text(angle = 45, hjust = 1)) -->
-
-
-<!-- ggplot(electric_cars, aes(x = electric_vehicle_type, y = electric_range)) + -->
-<!--   geom_boxplot() + -->
-<!--   labs(title = "Distribución del Rango Eléctrico por Tipo de Vehículo Eléctrico", -->
-<!--        x = "Tipo de Vehículo Eléctrico", -->
-<!--        y = "Rango Eléctrico")  -->
-
-
-<!-- ggplot(data = electric_cars, aes(x = base_msrp, y = electric_range)) + -->
-<!--   geom_point() + -->
-<!--   labs(title = "Diagrama de Dispersión: Electric Range vs Base MSRP", -->
-<!--        x = "Electric Range", -->
-<!--        y = "Base MSRP") -->
-<!-- ``` -->
-
-
-<!-- ```{r} -->
-<!-- # Filtrar los datos para obtener solo las filas donde Base MSRP y Electric Range son distintos de cero -->
-<!-- sample_data <- electric_cars[electric_cars$base_msrp != 0 & electric_cars$electric_range != 0, ] -->
-
-<!-- # Verificar la muestra obtenida -->
-<!-- head(sample_data) -->
-<!-- ``` -->
-
 
 # Modelado de Datos
 
