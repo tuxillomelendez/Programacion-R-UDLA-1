@@ -55,3 +55,19 @@ conectar_mysql_desde_ini <- function(archivo_config) {
   # Retornar la conexión
   return(con)
 }
+
+
+
+reemplaza_ceros_medianas <- function(df, columna) {
+  # Calcular la mediana para la columna especificada
+  median_value <- median(df[[columna]][df[[columna]] != 0], na.rm = TRUE)
+
+  # Reemplazar ceros con la mediana
+  df[[columna]][df[[columna]] == 0] <- median_value
+
+  # Devolver el dataframe modificado
+  return(df)
+}
+
+
+
