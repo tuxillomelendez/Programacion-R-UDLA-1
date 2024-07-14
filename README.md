@@ -1,6 +1,6 @@
 # Order de Revision
 ## Archivos del informe
-+ El archivo del informe se llama **"Evaluacion_1_Programacion_R.hmtl"** y se puede consultar en el siguiente [link](https://tuxillomelendez.github.io/Programacion-R-UDLA/) en formato sitio web.
++ El archivo del informe se llama **"Evaluacion_1_Programacion_R.hmtl"** y se puede consultar en el siguiente [link](https://tuxillomelendez.github.io/Programacion-R-UDLA-1/) en formato sitio web.
 + Archivo Fuente RMarkdown: **Evaluacion_1_Programacion_R.Rmd**
 + Funciones: **funciones_jmb_R.R**
 + Archivo CSV: **Electric_Vehicle_Population_Data.zip**
